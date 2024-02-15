@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Demand Prediction</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+<body>
+    <div class="first_cont">
+        <div class="topnav">
+            <div class="logo">
+                <label for="">Skill<span style="color: rgb(160, 33, 33);">Up</span></label>
+            </div>
+            <div class="top">
+                <!-- <a class="active" href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+                <a href="#news">News</a>
+                <a href=""><button>signUp</button></a> -->
+            </div>
+        </div>
+        <div class="container">
+            <div class="form">
+                <div class="form_in">
+                <label id="header">Discover Your Potential</label>
+                <label id="career"><span style="color: rgb(160, 33, 33);">Biuld</span> Your Career</label>
+                <p>Take the first step towards building a successful career. Enter your skills below to explore new opportunities and bridge the skill gap!</p>                
+                <div class="form-container">
+                    <form id="skill-form">
+                        <input type="text" id="skills" name="skills"><br>
+                        <button id="form_button" type="button" onclick="predict()">Predict</button>
+                    </form>
+                </div>
+            </div>
+            </div>
+            <div class="carousel-container"> 
+                <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="{{ url_for('static', filename='trends.jpeg') }}" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="{{ url_for('static', filename='gears.jpeg') }}" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="{{ url_for('static', filename='coding.jpeg') }}" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="{{ url_for('static', filename='engineering.jpeg') }}" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="{{ url_for('static', filename='bet.jpeg') }}" class="d-block w-100" alt="...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    <div id="result"></div>
+
+    <div class="demand">
+        <label id="title">ON DEMAND SKILLS</label>
+        <div class="skill_container">
+            <!-- <div class="skill_box1">{{ skill }}</div>
+            <div class="skill_box">{{ skill }}</div>
+            <div class="skill_box">{{ skill }}</div>
+            <div class="skill_box">{{ skill }}</div>
+            <div class="skill_box">{{ skill }}</div>
+            <div class="skill_box">{{ skill }}</div> -->
+            <div class="skill_box1">paid social media strategies</div>
+            <div class="skill_box">test framework development</div>
+            <div class="skill_box">typography and color theory</div>
+            <div class="skill_box">content creation</div>
+            <div class="skill_box">user experience ux</div>
+            <div class="skill_box">visual design and layout </div>
+        </div>
+    </div>
+    
+    <div class="demand">
+        <div class="skill_container">
+            {% for skill in high_demand_skills %}
+                <div class="skill_box">{{ skill }}</div>
+            {% endfor %}
+        </div>
+    </div>
+    
+
+    
+    <script>
+        function predict() {
+            var skills = $("#skills").val();
+            $.ajax({
+                url: "/predict",
+                type: "POST",
+                data: { skills: skills },
+                success: function(data) {
+                    $("#result").html(data);
+                }
+            });
+        }
+        const myCarouselElement = document.querySelector('#carouselExampleSlidesOnly')
+
+        const carousel = new bootstrap.Carousel(myCarouselElement, {
+        interval: 3000,
+        touch: false
+        })
+       
+
+ document.addEventListener('DOMContentLoaded', () => {
+    fetch('/high-demand-skills')
+        .then(response => response.json())
+        .then(data => {
+            const skillContainer = document.querySelector('.skill_container');
+            if (skillContainer1) {
+                data.forEach((skill, index) => {
+                    if (index < 6) { // Limit to 6 skills for display
+                        let skillBox;
+                        if (index === 0) {
+                            // Select the first skill box with class 'skill_box1'
+                            const skillBoxes1 = skillContainer.querySelectorAll('.skill_box1');
+                            skillBox = skillBoxes1.length > 0 ? skillBoxes1[0] : null;
+                        } else {
+                            // Select the skill box with class 'skill_box' at the current index
+                            skillBox = skillContainer.querySelector(`.skill_box:nth-child(${index + 1})`);
+                        }
+                        if (skillBox) {
+                            skillBox.textContent = skill;
+                        } else {
+                            console.error(`Skill box ${index + 1} not found`);
+                        }
+                    }
+                });
+            } else {
+                console.error('Skill container not found');
+            }
+        });
+});
+
+// Get the modal
+var modal = document.getElementById("modal");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal
+$("#result").on('click', function() {
+    modal.style.display = "block";
+});
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+};
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+};
+
+    </script>
+    
+</body>
+</html>
